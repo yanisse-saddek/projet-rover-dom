@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 
 *{
     margin:0;
@@ -12,19 +13,39 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    overflow: hidden;
+
+}
+.app-game{
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.result{
+    width:100%;
+    height:100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6rem;
+    font-weight: bold;
+    flex-direction: column;
 }
 .cases{
-    height:80vh;
-    width:40%;
+    height:50vh;
+    width:30%;
     display:grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     align-items:center;
     justify-items:center;
+    margin-top:20px
 }
 .case{
     border:1px solid black;
-    height:50px;
-    width:50px;
+    height:40px;
+    width:40px;
 }
 
 .cmd{
@@ -32,14 +53,16 @@
     align-items: center;
     justify-content: center;
     justify-content: space-around;
-    height:20vh;
-    width:100%
+    height:45vh;
+    width:100%;
+    margin-top:20px;
 }
 .cmd a{
     border: 1px solid;
     padding:20px;
     border-radius:30px;
     background: #f26d26;
+    cursor:pointer;
 }
 .infos{
     width:40%;
@@ -51,3 +74,62 @@
     font-weight: bold;
     font-size: 3rem;
 }
+.restart{
+    cursor:pointer;
+    font-size:2rem;
+}
+.title{
+    font-size:3rem;
+    font-weight: bold;
+    font-family: 'Righteous', cursive !important;
+}
+.menu{
+    width:100%;
+    height:100VH;
+    background: rgb(242,142,38);
+    background: linear-gradient(90deg, rgba(242,142,38,1) 0%, rgba(247,98,59,1) 92%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction:column-reverse;
+}
+.menu .title-menu{
+    font-size:3rem;
+    border:3px solid black;
+    padding:1rem 4rem; 
+    border-radius:30px;
+    cursor:pointer;
+}
+.menu img{
+    display: flex;
+    justify-content: center;
+    margin-right:50%;
+    height:60%;
+    margin-bottom:70px
+}
+
+.title-menu:hover + #img{ 
+    animation: 2s   glissement;  
+    animation-fill-mode:forwards;
+}
+
+
+@keyframes glissement {
+    from {
+    }
+    25% {
+        transform:rotate(-30deg)
+    }
+    50% {
+        transform:rotate(0deg)
+    }
+    75% {
+        transform:rotate(-30deg)
+    }
+
+    to {
+        margin-left:170%;
+        transform:rotate(0deg)
+    }
+  }
+  

@@ -1,22 +1,65 @@
+// var titleMenu = document.getElementById("title-menu");
+// var menuImg = document.getElementById("img");
+
+// titleMenu.onmouseover = function() {
+//    menuImg.animate([
+//        {transform: 'margin-'}
+//    ])
+// };
+
+
+
+
+gameStatut = true;
 document.addEventListener('keydown', logKey);
 function logKey(e) {
-    if(e.keyCode == "39"){
-        turnRight(rover)
-    }else if(e.keyCode == "38"){
-        moveForward(rover)
-    }else if(e.keyCode == "40"){
-        moveBackward(rover)
-    }else if(e.keyCode == "37"){
-        turnLeft(rover)
+    if(gameStatut){
+        if(e.keyCode == "39"){
+            turnRight(rover)
+        }else if(e.keyCode == "38"){
+            moveForward(rover)
+        }else if(e.keyCode == "40"){
+            moveBackward(rover)
+        }else if(e.keyCode == "37"){
+            turnLeft(rover)
+        }    
     }
 }
-timeLeft = 60
+timeLeft = 999999999999999999999999
 function getTimeLeft(){
     timeLeft--;
+    if(timeLeft == 0){
+        gameStatut = false;
+        gameState()
+    }
+}
+function changeGameState(){
+    gameStatut = true;
+    timeLeft = 10
+    score = 0
+    gameState()
+}
+function gameState(){
+    resultHTML = document.getElementById('result');
+    gameHTML = document.getElementById('app-game');
+    menuHTML = document.getElementById('menu');
+
+    if(!gameStatut){
+        resultHTML.style.display = "flex";
+        gameHTML.style.display = "none";
+    }else{
+        resultHTML.style.display = "none";
+        gameHTML.style.display = "flex";
+        menuHTML.style.display ="none"
+    }
+    scoreHTML = document.getElementById('score')
+    scoreHTML.innerHTML = "Score: "+score; 
+    finalScoreHTML = document.getElementById('finalScore')
+    finalScoreHTML.innerHTML = "Score: "+score
     timeLeftHTML = document.getElementById('timeLeft');
     timeLeftHTML.innerHTML = "Temps restant: "+ timeLeft; 
 
-    console.log('ok')
+
 }
 setInterval(getTimeLeft, 1000)
 
@@ -41,6 +84,7 @@ var rover = {
 }
 var score = 0
 var randomCase = 0
+
 function newItem(){
 var randomCaseY = Math.floor(Math.random() * 9)
 var randomCaseX= Math.floor(Math.random() * 9)
@@ -50,9 +94,6 @@ getHtmlCase.style.backgroundImage = "url('img/lune.png')"
 getHtmlCase.style.backgroundPosition = "center"
 getHtmlCase.style.backgroundSize ="35px"
 getHtmlCase.style.backgroundRepeat = "no-repeat"
-
-scoreHTML = document.getElementById('score')
-scoreHTML.innerHTML = "Score: "+score; 
 }
 
 newItem()
