@@ -106,24 +106,42 @@
 .menu img{
     display: flex;
     justify-content: center;
-    margin-right:50%;
     height:100%;
     margin-bottom:70px;
+    animation: 2s   start;  
+    
 }
 
 .title-menu:hover + #img{ 
-    animation: 2s   glissement;  
+    animation: 3s   glissement;  
     animation-fill-mode:forwards;
 }
+
+@keyframes start {
+    from {
+        margin-right:130%
+    }
+    20% {
+        transform:rotate(0deg);
+    }
+    80%{
+        transform:rotate(-30deg);
+    }
+    to {
+    }
+  }
+  
 
 
 @keyframes glissement {
     from {
     }
-    40% {
-        transform:rotate(-30deg)
+    20% {
+        transform:rotate(0deg);
     }
-
+    50%{
+        transform:rotate(-30deg);
+    }
     to {
         margin-left:180%;
         transform:rotate(0deg);

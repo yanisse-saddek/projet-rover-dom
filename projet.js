@@ -1,6 +1,8 @@
 // var titleMenu = document.getElementById("title-menu");
 // var menuImg = document.getElementById("img");
 
+//const { clear } = require("console");
+
 // titleMenu.onmouseover = function() {
 //    menuImg.animate([
 //        {transform: 'margin-'}
@@ -26,6 +28,9 @@ function logKey(e) {
     }
 }
 timeLeft = 999999999999999999999999
+var score = 0
+var randomCase = 0
+
 function getTimeLeft(){
     timeLeft--;
     timeLeftHTML = document.getElementById('timeLeft');
@@ -35,27 +40,50 @@ function getTimeLeft(){
         gameState()
     }
 }
+
 function changeGameState(){
     gameStatut = true;
     gameState()
+
 }
+nombrePartie = 0
 function gameState(){
     resultHTML = document.getElementById('result');
     gameHTML = document.getElementById('app-game');
     menuHTML = document.getElementById('menu');
     timeLeft = 60
-    score = 0
+    score = 0;
+    scoreHTML = document.getElementById('score')
+    scoreHTML.innerHTML = "Score: "+score; 
+    nombrePartie++
     if(!gameStatut){
         resultHTML.style.display = "flex";
         gameHTML.style.display = "none";
     }else{
         resultHTML.style.display = "none";
         gameHTML.style.display = "flex";
-        menuHTML.style.display ="none"
+        menuHTML.style.display ="none";
+        if(nombrePartie > 1){
+            clearCase()   
+        }
+        setInterval(newBonus, 15000)
     }
 }
-setInterval(getTimeLeft, 1000)
 
+setInterval(getTimeLeft, 1000)
+function clearCase(){
+    for(i=0; i<10; i++){
+        for(j=0; j<10; j++){
+            caseX = i.toString()
+            caseY = j.toString()
+            pos = caseY+ caseX
+            caseProute = document.getElementById(pos)
+            caseProute.style.background = ""
+            caseProute.style.border = "1px black solid"    
+            htmlCase()    
+        }
+    }
+}
 
 var travelLog = []
 var grid = [
@@ -75,26 +103,40 @@ var rover = {
     x: 0,
     y: 0,
 }
-var score = 0
-var randomCase = 0
+
 
 function newItem(){
-var randomCaseY = Math.floor(Math.random() * 9)
-var randomCaseX= Math.floor(Math.random() * 9)
- randomCase = randomCaseY.toString() + randomCaseX.toString();
-var getHtmlCase = document.getElementById(randomCase)
-getHtmlCase.style.backgroundImage = "url('img/lune.png')"
-getHtmlCase.style.backgroundPosition = "center"
-getHtmlCase.style.backgroundSize ="35px"
-getHtmlCase.style.backgroundRepeat = "no-repeat"
+    var randomCaseY = Math.floor(Math.random()* 9)
+    var randomCaseX= Math.floor(Math.random() * 9)
+    randomCase = randomCaseY.toString() + randomCaseX.toString();
+    var getHtmlCase = document.getElementById(randomCase)
+    getHtmlCase.style.backgroundImage = "url('img/lune.png')"
+    getHtmlCase.style.backgroundPosition = "center"
+    getHtmlCase.style.backgroundSize ="35px"
+    getHtmlCase.style.backgroundRepeat = "no-repeat"
 
-scoreHTML = document.getElementById('score')
-scoreHTML.innerHTML = "Score: "+score; 
-finalScoreHTML = document.getElementById('finalScore')
-finalScoreHTML.innerHTML = "Score: "+score
+    scoreHTML = document.getElementById('score')
+    scoreHTML.innerHTML = "Score: "+score; 
+    finalScoreHTML = document.getElementById('finalScore')
+    finalScoreHTML.innerHTML = "Score: "+score
+}
+newItem()
+var randomCaseBonus = 0
+function newBonus(){
+    var randomCaseY = Math.floor(Math.random() * 10)
+    var randomCaseX= Math.floor(Math.random() * 10)
+    randomCaseBonus = randomCaseY.toString() + randomCaseX.toString();
+    var getHtmlCase = document.getElementById(randomCaseBonus)
+
+    getHtmlCase.style.backgroundImage = "url('img/time.png')"
+    getHtmlCase.style.backgroundPosition = "center"
+    getHtmlCase.style.backgroundSize ="35px"
+    getHtmlCase.style.backgroundRepeat = "no-repeat"
 }
 
-newItem()
+
+
+
 function htmlCase(){
     roverX = rover.x.toString()
     roverY = rover.y.toString()
@@ -102,12 +144,16 @@ function htmlCase(){
     var getCase = document.getElementById(pos)
     getCase.style.backgroundImage = "url('img/rover.png')"
     getCase.style.backgroundPosition = "center"
-    getCase.style.backgroundSize = "50px"
+    getCase.style.backgroundSize = "50px";
+    getCase.style.zIndex = "9999"
 
     if(pos === randomCase){
         score++ 
         console.log("score", score)
         newItem()
+    }else if(pos === randomCaseBonus){
+        timeLeft += 10;
+
     }
 
 
@@ -149,7 +195,6 @@ function turnRight(rover){
         rover.direction = "N"
     }
     grid[rover.y][rover.x] = rover.direction
-    console.table(grid);
     htmlCase()
 }
 grid[rover.y][rover.x] = rover.direction
@@ -169,7 +214,6 @@ function turnLeft(rover){
         rover.direction = "N"
     }
     grid[rover.y][rover.x] = rover.direction
-    console.table(grid)
     htmlCase()
 }
 function changeCase(caseProute){
@@ -215,7 +259,6 @@ function moveBackward(rover){
     if(rover.direction == "E" && rover.x !== 9){
         roverX = rover.x+1
         ancienPos = rover.y.toString() + roverX ; 
-        console.log("--->",ancienPos)
         caseProute = document.getElementById(ancienPos)
         changeCase(caseProute)
     }
@@ -233,9 +276,6 @@ function moveBackward(rover){
     }
 
     grid[rover.y][rover.x] = rover.direction
-    console.table(rover.direction)
-    console.log('-----------------------------')
-    console.table(grid)
     htmlCase()
 
 }
@@ -253,7 +293,6 @@ function moveForward(rover){
         rover.y = rover.y
         rover.x -= 1
     }
-    console.log('y', rover.y, 'x', rover.x)
     
     if(rover.direction == "W" && rover.x !== -1){
         roverX = rover.x+1
@@ -264,7 +303,6 @@ function moveForward(rover){
     if(rover.direction == "E" && rover.x !== 10){
         roverX = rover.x-1
         ancienPos = rover.y.toString() + roverX ; 
-        console.log("--->",ancienPos)
         caseProute = document.getElementById(ancienPos)
         changeCase(caseProute)
     }
