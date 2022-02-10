@@ -109,13 +109,13 @@ var rover = {
 wallList = []
 function newWall(){
     
-    for(i=0; i<=50; i++){
+    for(i=0; i<=30; i++){
         var randomCaseY = Math.floor(Math.random() * 8 +1 )
         var randomCaseX= Math.floor(Math.random() * 8 +1 )
         randomCaseWall = randomCaseY.toString() + randomCaseX.toString();
         var getHtmlCase = document.getElementById(randomCaseWall)    
         wallList.push(randomCaseWall)
-        getHtmlCase.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/269/269942.png')"
+        getHtmlCase.style.backgroundImage = "url('img/wall.png')"
         getHtmlCase.style.backgroundPosition = "center"
         getHtmlCase.style.backgroundSize ="35px"
         getHtmlCase.style.backgroundRepeat = "no-repeat"
