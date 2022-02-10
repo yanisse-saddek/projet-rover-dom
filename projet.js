@@ -44,7 +44,7 @@ function getTimeLeft(){
 function changeGameState(){
     gameStatut = true;
     gameState()
-
+    newItem()
 }
 nombrePartie = 0
 function gameState(){
@@ -67,11 +67,13 @@ function gameState(){
             clearCase()   
         }
         setInterval(newBonus, 15000)
+        newWall()
     }
 }
 
 setInterval(getTimeLeft, 1000)
 function clearCase(){
+    wallList = []
     for(i=0; i<10; i++){
         for(j=0; j<10; j++){
             caseX = i.toString()
@@ -79,7 +81,8 @@ function clearCase(){
             pos = caseY+ caseX
             caseProute = document.getElementById(pos)
             caseProute.style.background = ""
-            caseProute.style.border = "1px black solid"    
+            caseProute.style.border = "1px black solid"
+            caseProute.style.transform = "rotate(0deg)"
             htmlCase()    
         }
     }
@@ -103,6 +106,21 @@ var rover = {
     x: 0,
     y: 0,
 }
+wallList = []
+function newWall(){
+    
+    for(i=0; i<=50; i++){
+        var randomCaseY = Math.floor(Math.random() * 8 +1 )
+        var randomCaseX= Math.floor(Math.random() * 8 +1 )
+        randomCaseWall = randomCaseY.toString() + randomCaseX.toString();
+        var getHtmlCase = document.getElementById(randomCaseWall)    
+        wallList.push(randomCaseWall)
+        getHtmlCase.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/269/269942.png')"
+        getHtmlCase.style.backgroundPosition = "center"
+        getHtmlCase.style.backgroundSize ="35px"
+        getHtmlCase.style.backgroundRepeat = "no-repeat"
+    }
+}
 
 
 function newItem(){
@@ -110,17 +128,38 @@ function newItem(){
     var randomCaseX= Math.floor(Math.random() * 9)
     randomCase = randomCaseY.toString() + randomCaseX.toString();
     var getHtmlCase = document.getElementById(randomCase)
-    getHtmlCase.style.backgroundImage = "url('img/lune.png')"
-    getHtmlCase.style.backgroundPosition = "center"
-    getHtmlCase.style.backgroundSize ="35px"
-    getHtmlCase.style.backgroundRepeat = "no-repeat"
 
     scoreHTML = document.getElementById('score')
     scoreHTML.innerHTML = "Score: "+score; 
     finalScoreHTML = document.getElementById('finalScore')
     finalScoreHTML.innerHTML = "Score: "+score
+
+
+
+    caseYxTop = randomCaseY -1 + randomCaseX.toString()
+    caseYxBottom = randomCaseY +1 + randomCaseX.toString()
+    caseyXLeft = randomCaseY.toString() + (randomCaseX - 1 )
+    caseyXRight = randomCaseY.toString() + (randomCaseX + 1)
+
+    console.log(caseYxTop, caseYxBottom, caseyXLeft, caseyXRight)
+    if(wallList.includes(caseYxTop) == true && wallList.includes(caseYxBottom) == true && wallList.includes(caseyXLeft) == true && wallList.includes(caseyXRight) == true){
+        console.log('remplacage du proute')
+        newItem()
+    }else{
+        if(wallList.includes(randomCase) == false){
+            getHtmlCase.style.backgroundImage = "url('img/lune.png')"
+            getHtmlCase.style.backgroundPosition = "center"
+            getHtmlCase.style.backgroundSize ="35px"
+            getHtmlCase.style.backgroundRepeat = "no-repeat"
+        }else if(wallList.includes(randomCase) == true){
+            console.log('relance')
+            newItem()
+        }
+    }
 }
-newItem()
+
+
+
 var randomCaseBonus = 0
 function newBonus(){
     var randomCaseY = Math.floor(Math.random() * 10)
@@ -128,14 +167,16 @@ function newBonus(){
     randomCaseBonus = randomCaseY.toString() + randomCaseX.toString();
     var getHtmlCase = document.getElementById(randomCaseBonus)
 
-    getHtmlCase.style.backgroundImage = "url('img/time.png')"
-    getHtmlCase.style.backgroundPosition = "center"
-    getHtmlCase.style.backgroundSize ="35px"
-    getHtmlCase.style.backgroundRepeat = "no-repeat"
+    if(wallList.includes(randomCaseBonus) == false){
+        getHtmlCase.style.backgroundImage = "url('img/time.png')"
+        getHtmlCase.style.backgroundPosition = "center"
+        getHtmlCase.style.backgroundSize ="35px"
+        getHtmlCase.style.backgroundRepeat = "no-repeat"
+    }else if(wallList.includes(randomCaseBonus) == true ){
+        console.log('relance')
+        newBonus()
+    }
 }
-
-
-
 
 function htmlCase(){
     roverX = rover.x.toString()
@@ -149,7 +190,6 @@ function htmlCase(){
 
     if(pos === randomCase){
         score++ 
-        console.log("score", score)
         newItem()
     }else if(pos === randomCaseBonus){
         timeLeft += 10;
@@ -181,7 +221,6 @@ function getEntrie(){
 }
 
 function turnRight(rover){
-    console.log('right')
     if(rover.direction === "N"){
          rover.direction = "E"
     }
@@ -200,7 +239,6 @@ function turnRight(rover){
 grid[rover.y][rover.x] = rover.direction
 
 function turnLeft(rover){
-    console.log('left')
     if(rover.direction === "N"){
         rover.direction = "W"
     }
@@ -217,62 +255,77 @@ function turnLeft(rover){
     htmlCase()
 }
 function changeCase(caseProute){
-    caseProute.style.background = ""
-    caseProute.style.border = "1px black solid"
+        caseProute.style.background = ""
+        caseProute.style.border = "1px black solid"    
 }
 function moveBackward(rover){
     grid[rover.y][rover.x] = rover.direction
     if(rover.direction == "N"  && rover.y !== 9){
-        rover.y += 1;
-        rover.x = rover.x
+        roverY = rover.y + 1
+        roverPos = roverY + rover.x.toString()
+        if(wallList.includes(roverPos) == false){
+            rover.y += 1;
+            rover.x = rover.x
+        }  
+
     }else if(rover.direction == "S" && rover.y !== 0){
-        rover.y -= 1
-        rover.x = rover.x
+        roverY = rover.y - 1
+        roverPos = roverY + rover.x.toString()
+        if(wallList.includes(roverPos) == false){
+            rover.y -= 1
+            rover.x = rover.x
+        }  
+
+
     }else if(rover.direction == "E" && rover.x !== 0){
-        rover.y = rover.y
-        rover.x -= 1
+        roverX = rover.x - 1
+        roverPos = rover.y.toString() + roverX
+        if(wallList.includes(roverPos) == false){
+            rover.y = rover.y
+            rover.x -= 1
+        }  
     }else if(rover.direction == "W" && rover.x !== 9 ){
-        rover.y = rover.y
-        rover.x += 1
+        roverX = rover.x + 1
+        roverPos = rover.y.toString() + roverX
+        if(wallList.includes(roverPos) == false){
+            rover.y = rover.y
+            rover.x += 1
+        } 
+
     }
     
-    if(rover.direction == "W" && rover.x !== 0){
-        grid[rover.y][rover.x-1] = ""
-    }
-    if(rover.direction == "E" && rover.x !== 9){
-        grid[rover.y][rover.x+1] = ""
-    }
-    if(rover.direction == "N" && rover.y !== 0){
-        grid[rover.y-1][rover.x] = ""
-    }
-    if(rover.direction == "S" && rover.y !== 9){
-        grid[rover.y+1][rover.x] = ""
-    }
-
     if(rover.direction == "W" && rover.x !== 0){
         roverX = rover.x-1
         ancienPos = rover.y.toString() + roverX;
         caseProute = document.getElementById(ancienPos)
-        changeCase(caseProute)
+        if(wallList.includes(ancienPos) == false){
+            changeCase(caseProute)
+        }
 
     }
     if(rover.direction == "E" && rover.x !== 9){
         roverX = rover.x+1
         ancienPos = rover.y.toString() + roverX ; 
         caseProute = document.getElementById(ancienPos)
-        changeCase(caseProute)
+        if(wallList.includes(ancienPos) == false){
+            changeCase(caseProute)
+        }
     }
     if(rover.direction == "N" && rover.y !== 0){
         roverY = rover.y-1
         ancienPos = roverY + rover.x.toString()
         caseProute = document.getElementById(ancienPos)
-        changeCase(caseProute)
+        if(wallList.includes(ancienPos) == false){
+            changeCase(caseProute)
+        }
     }
     if(rover.direction == "S" && rover.y !== 9){
         roverY = rover.y+1
         ancienPos = roverY + rover.x.toString()
         caseProute = document.getElementById(ancienPos)
-        changeCase(caseProute)
+        if(wallList.includes(ancienPos) == false){
+            changeCase(caseProute)
+        }
     }
 
     grid[rover.y][rover.x] = rover.direction
@@ -280,43 +333,73 @@ function moveBackward(rover){
 
 }
 function moveForward(rover){
-    if(rover.direction == "N"  && rover.y !== 0){
-        rover.y -= 1;
-        rover.x = rover.x
+
+    if(rover.direction == "N"  && rover.y !== 0){   
+        roverY = rover.y - 1
+        roverPos = roverY + rover.x.toString()
+        if(wallList.includes(roverPos) == false){
+            rover.y -= 1;
+            rover.x = rover.x
+            console.log('ok')
+        }   
+
     }else if(rover.direction == "S"  && rover.y !== 9){
-        rover.y += 1
-        rover.x = rover.x
+        roverY = rover.y + 1
+        roverPos = roverY + rover.x.toString()
+        if(wallList.includes(roverPos) == false){
+            rover.y += 1
+            rover.x = rover.x
+        }   
     }else if(rover.direction == "E" && rover.x < 9){
-        rover.y = rover.y
-        rover.x += 1
+        roverX = rover.x + 1
+        roverPos = rover.y.toString() + roverX
+        if(wallList.includes(roverPos) == false){
+            rover.y = rover.y
+            rover.x += 1
+            console.log('ok')
+        }  
     }else if(rover.direction == "W" && rover.x > 0 ){
-        rover.y = rover.y
-        rover.x -= 1
+        roverX = rover.x - 1
+        roverPos = rover.y.toString() + roverX
+        if(wallList.includes(roverPos) == false){
+            rover.y = rover.y
+            rover.x -= 1
+            console.log('ok')
+        }
     }
     
     if(rover.direction == "W" && rover.x !== -1){
         roverX = rover.x+1
         ancienPos = rover.y.toString() + roverX;
         caseProute = document.getElementById(ancienPos)
-        changeCase(caseProute)
+        if(wallList.includes(ancienPos) == false){
+            changeCase(caseProute)
+        }
     }
     if(rover.direction == "E" && rover.x !== 10){
         roverX = rover.x-1
         ancienPos = rover.y.toString() + roverX ; 
         caseProute = document.getElementById(ancienPos)
-        changeCase(caseProute)
+        if(wallList.includes(ancienPos) == false){
+            changeCase(caseProute)
+        }
     }
     if(rover.direction == "N" && rover.y !== -1){
         roverY = rover.y+1
         ancienPos = roverY + rover.x.toString()
         caseProute = document.getElementById(ancienPos)
-        changeCase(caseProute)
+        if(wallList.includes(ancienPos) == false){
+            changeCase(caseProute)
+        }
     }
     if(rover.direction == "S" && rover.y !== 10){
         roverY = rover.y-1
         ancienPos = roverY + rover.x.toString()
         caseProute = document.getElementById(ancienPos)
-        changeCase(caseProute)
+        if(wallList.includes(ancienPos) == false){
+            changeCase(caseProute)
+            console.log('ok ca change')
+        }
     }
 
     grid[rover.y][rover.x] = rover.direction
