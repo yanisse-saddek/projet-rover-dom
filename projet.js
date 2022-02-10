@@ -28,6 +28,8 @@ function logKey(e) {
 timeLeft = 999999999999999999999999
 function getTimeLeft(){
     timeLeft--;
+    timeLeftHTML = document.getElementById('timeLeft');
+    timeLeftHTML.innerHTML = "Temps restant: "+ timeLeft; 
     if(timeLeft == 0){
         gameStatut = false;
         gameState()
@@ -35,15 +37,14 @@ function getTimeLeft(){
 }
 function changeGameState(){
     gameStatut = true;
-    timeLeft = 10
-    score = 0
     gameState()
 }
 function gameState(){
     resultHTML = document.getElementById('result');
     gameHTML = document.getElementById('app-game');
     menuHTML = document.getElementById('menu');
-
+    timeLeft = 60
+    score = 0
     if(!gameStatut){
         resultHTML.style.display = "flex";
         gameHTML.style.display = "none";
@@ -52,14 +53,6 @@ function gameState(){
         gameHTML.style.display = "flex";
         menuHTML.style.display ="none"
     }
-    scoreHTML = document.getElementById('score')
-    scoreHTML.innerHTML = "Score: "+score; 
-    finalScoreHTML = document.getElementById('finalScore')
-    finalScoreHTML.innerHTML = "Score: "+score
-    timeLeftHTML = document.getElementById('timeLeft');
-    timeLeftHTML.innerHTML = "Temps restant: "+ timeLeft; 
-
-
 }
 setInterval(getTimeLeft, 1000)
 
@@ -94,6 +87,11 @@ getHtmlCase.style.backgroundImage = "url('img/lune.png')"
 getHtmlCase.style.backgroundPosition = "center"
 getHtmlCase.style.backgroundSize ="35px"
 getHtmlCase.style.backgroundRepeat = "no-repeat"
+
+scoreHTML = document.getElementById('score')
+scoreHTML.innerHTML = "Score: "+score; 
+finalScoreHTML = document.getElementById('finalScore')
+finalScoreHTML.innerHTML = "Score: "+score
 }
 
 newItem()

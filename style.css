@@ -99,13 +99,16 @@
     padding:1rem 4rem; 
     border-radius:30px;
     cursor:pointer;
+    position:absolute;
+    z-index: 999;
+    top:80%
 }
 .menu img{
     display: flex;
     justify-content: center;
     margin-right:50%;
-    height:60%;
-    margin-bottom:70px
+    height:100%;
+    margin-bottom:70px;
 }
 
 .title-menu:hover + #img{ 
@@ -117,19 +120,14 @@
 @keyframes glissement {
     from {
     }
-    25% {
-        transform:rotate(-30deg)
-    }
-    50% {
-        transform:rotate(0deg)
-    }
-    75% {
+    40% {
         transform:rotate(-30deg)
     }
 
     to {
-        margin-left:170%;
-        transform:rotate(0deg)
+        margin-left:180%;
+        transform:rotate(0deg);
+
     }
   }
   
