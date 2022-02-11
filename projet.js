@@ -1,14 +1,44 @@
 // var titleMenu = document.getElementById("title-menu");
 // var menuImg = document.getElementById("img");
 
-//const { clear } = require("console");
 
 // titleMenu.onmouseover = function() {
 //    menuImg.animate([
 //        {transform: 'margin-'}
 //    ])
 // };
+var randomCaseReload = 0
 
+function reload(){
+    randomCaseReload = 0
+    var randomCaseY = Math.floor(Math.random() * 10  )
+    var randomCaseX= Math.floor(Math.random() * 9  + 1)
+    randomCaseReload = randomCaseY.toString() + randomCaseX.toString();
+    var getHtmlCase = document.getElementById(randomCaseReload)   
+
+    caseYxTop = randomCaseY -1 + randomCaseX.toString()
+    caseYxBottom = randomCaseY +1 + randomCaseX.toString()
+    caseyXLeft = randomCaseY.toString() + (randomCaseX - 1 )
+    caseyXRight = randomCaseY.toString() + (randomCaseX + 1)
+
+    console.log('reload top', caseYxTop, 'reload bottom', caseYxBottom, "reload left", caseyXLeft, 'reload right', caseyXRight)
+    if(wallList.includes(caseYxTop) == true && wallList.includes(caseYxBottom) == true && wallList.includes(caseyXLeft) == true && wallList.includes(caseyXRight) == true){
+        console.log('remplacage du proute')
+        reload()
+    }else{
+        if(wallList.includes(randomCaseReload) == false){
+            getHtmlCase.style.backgroundImage = "url('img/reload.png')"
+            getHtmlCase.style.backgroundPosition = "center"
+            getHtmlCase.style.backgroundSize ="35px"
+            getHtmlCase.style.backgroundRepeat = "no-repeat"
+
+        }else if(wallList.includes(randomCaseReload) == true){
+            console.log('relance')
+            reload()
+        }
+    }
+}
+setTimeout(reload,3000)
 
 
 
@@ -38,6 +68,7 @@ function getTimeLeft(){
     if(timeLeft == 0){
         gameStatut = false;
         gameState()
+        
     }
 }
 
@@ -66,28 +97,32 @@ function gameState(){
         if(nombrePartie > 1){
             clearCase()   
         }
-        setInterval(newBonus, 15000)
+        setTimeout(newBonus, 1000)
         newWall()
     }
 }
-
 setInterval(getTimeLeft, 1000)
 function clearCase(){
-    wallList = []
-    for(i=0; i<10; i++){
-        for(j=0; j<10; j++){
-            caseX = i.toString()
-            caseY = j.toString()
-            pos = caseY+ caseX
-            caseProute = document.getElementById(pos)
-            caseProute.style.background = ""
-            caseProute.style.border = "1px black solid"
-            caseProute.style.transform = "rotate(0deg)"
-            htmlCase()    
+    for(yCase=0; yCase<10; yCase++){
+        for(xCase=0; xCase<10; xCase++){
+            clearY = yCase
+            clearX = xCase
+            positionCase = clearY.toString() + clearX.toString()
+            var clearCase = document.getElementById(positionCase)
+            roverPos = getRoverPos()
+            if(positionCase !== roverPos){
+                clearCase.style.background = "none"
+                clearCase.style.border = "1px black solid"
+                clearCase.style.transform = "rotate(0deg)"
+            }
         }
     }
+    newWall()
+    bonus = false;
+    newBonus()
+    newItem()
+    setInterval(reload, 10000)
 }
-
 var travelLog = []
 var grid = [
     ["", "", "", "", "", "", "", "", "", "" ],
@@ -108,21 +143,30 @@ var rover = {
 }
 wallList = []
 function newWall(){
-    
-    for(i=0; i<=30; i++){
-        var randomCaseY = Math.floor(Math.random() * 8 +1 )
-        var randomCaseX= Math.floor(Math.random() * 8 +1 )
+    wallList = []
+    roverPos = getRoverPos();
+    console.log(roverPos)
+    for(i=0; i<=25; i++){
+        var randomCaseY = Math.floor(Math.random() * 10  )
+        var randomCaseX= Math.floor(Math.random() * 9  + 1)
         randomCaseWall = randomCaseY.toString() + randomCaseX.toString();
-        var getHtmlCase = document.getElementById(randomCaseWall)    
-        wallList.push(randomCaseWall)
-        getHtmlCase.style.backgroundImage = "url('img/wall.png')"
-        getHtmlCase.style.backgroundPosition = "center"
-        getHtmlCase.style.backgroundSize ="35px"
-        getHtmlCase.style.backgroundRepeat = "no-repeat"
+        var getHtmlCase = document.getElementById(randomCaseWall)   
+        if(randomCaseWall !== roverPos){
+            wallList.push(randomCaseWall)
+            getHtmlCase.style.backgroundImage = "url('img/wall.png')"
+            getHtmlCase.style.backgroundPosition = "center"
+            getHtmlCase.style.backgroundSize ="35px"
+            getHtmlCase.style.backgroundRepeat = "no-repeat"
+
+        }
     }
 }
-
-
+function getRoverPos(){
+    roverXPos = rover.x
+    roverYPos = rover.y 
+    roverPos = roverYPos.toString()+roverXPos.toString()
+    return roverPos;
+}
 function newItem(){
     var randomCaseY = Math.floor(Math.random()* 9)
     var randomCaseX= Math.floor(Math.random() * 9)
@@ -140,8 +184,6 @@ function newItem(){
     caseYxBottom = randomCaseY +1 + randomCaseX.toString()
     caseyXLeft = randomCaseY.toString() + (randomCaseX - 1 )
     caseyXRight = randomCaseY.toString() + (randomCaseX + 1)
-
-    console.log(caseYxTop, caseYxBottom, caseyXLeft, caseyXRight)
     if(wallList.includes(caseYxTop) == true && wallList.includes(caseYxBottom) == true && wallList.includes(caseyXLeft) == true && wallList.includes(caseyXRight) == true){
         console.log('remplacage du proute')
         newItem()
@@ -161,22 +203,27 @@ function newItem(){
 
 
 var randomCaseBonus = 0
+var bonus = false;
 function newBonus(){
     var randomCaseY = Math.floor(Math.random() * 10)
     var randomCaseX= Math.floor(Math.random() * 10)
+    randomCaseBonus = 0;
     randomCaseBonus = randomCaseY.toString() + randomCaseX.toString();
     var getHtmlCase = document.getElementById(randomCaseBonus)
+    if(wallList.includes(randomCaseBonus) == false && bonus == false){
+            getHtmlCase.style.backgroundImage = "url('img/time.png')"
+            getHtmlCase.style.backgroundPosition = "center"
+            getHtmlCase.style.backgroundSize ="35px"
+            getHtmlCase.style.backgroundRepeat = "no-repeat"
+            bonus = true;
+            console.log("la case du bonus est", randomCaseBonus)
 
-    if(wallList.includes(randomCaseBonus) == false){
-        getHtmlCase.style.backgroundImage = "url('img/time.png')"
-        getHtmlCase.style.backgroundPosition = "center"
-        getHtmlCase.style.backgroundSize ="35px"
-        getHtmlCase.style.backgroundRepeat = "no-repeat"
-    }else if(wallList.includes(randomCaseBonus) == true ){
-        console.log('relance')
-        newBonus()
-    }
+        }else if(wallList.includes(randomCaseBonus) == true ){
+            console.log('relance')
+            newBonus()
+        }
 }
+
 
 function htmlCase(){
     roverX = rover.x.toString()
@@ -191,9 +238,16 @@ function htmlCase(){
     if(pos === randomCase){
         score++ 
         newItem()
-    }else if(pos === randomCaseBonus){
-        timeLeft += 10;
-
+    }
+    if(pos === randomCaseBonus){
+        timeLeft += 5;
+        randomCaseBonus =0
+        bonus = false;
+        setTimeout(newBonus, 2000)
+    }
+    if(pos === randomCaseReload){
+        randomCaseReload = 0
+        clearCase()    
     }
 
 
@@ -340,7 +394,6 @@ function moveForward(rover){
         if(wallList.includes(roverPos) == false){
             rover.y -= 1;
             rover.x = rover.x
-            console.log('ok')
         }   
 
     }else if(rover.direction == "S"  && rover.y !== 9){
@@ -356,7 +409,6 @@ function moveForward(rover){
         if(wallList.includes(roverPos) == false){
             rover.y = rover.y
             rover.x += 1
-            console.log('ok')
         }  
     }else if(rover.direction == "W" && rover.x > 0 ){
         roverX = rover.x - 1
@@ -364,7 +416,6 @@ function moveForward(rover){
         if(wallList.includes(roverPos) == false){
             rover.y = rover.y
             rover.x -= 1
-            console.log('ok')
         }
     }
     
@@ -398,7 +449,6 @@ function moveForward(rover){
         caseProute = document.getElementById(ancienPos)
         if(wallList.includes(ancienPos) == false){
             changeCase(caseProute)
-            console.log('ok ca change')
         }
     }
 
