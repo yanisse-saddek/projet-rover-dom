@@ -8,7 +8,7 @@
 //    ])
 // };
 var randomCaseReload = 0
-
+var reloadItem = 0
 function reload(){
     randomCaseReload = 0
     var randomCaseY = Math.floor(Math.random() * 10  )
@@ -21,7 +21,6 @@ function reload(){
     caseyXLeft = randomCaseY.toString() + (randomCaseX - 1 )
     caseyXRight = randomCaseY.toString() + (randomCaseX + 1)
 
-    console.log('reload top', caseYxTop, 'reload bottom', caseYxBottom, "reload left", caseyXLeft, 'reload right', caseyXRight)
     if(wallList.includes(caseYxTop) == true && wallList.includes(caseYxBottom) == true && wallList.includes(caseyXLeft) == true && wallList.includes(caseyXRight) == true){
         console.log('remplacage du proute')
         reload()
@@ -31,14 +30,13 @@ function reload(){
             getHtmlCase.style.backgroundPosition = "center"
             getHtmlCase.style.backgroundSize ="35px"
             getHtmlCase.style.backgroundRepeat = "no-repeat"
-
+            reloadItem++
         }else if(wallList.includes(randomCaseReload) == true){
-            console.log('relance')
             reload()
         }
     }
 }
-setTimeout(reload,3000)
+
 
 
 
@@ -76,6 +74,7 @@ function changeGameState(){
     gameStatut = true;
     gameState()
     newItem()
+    reload()
 }
 nombrePartie = 0
 function gameState(){
@@ -99,6 +98,7 @@ function gameState(){
         }
         setTimeout(newBonus, 1000)
         newWall()
+        
     }
 }
 setInterval(getTimeLeft, 1000)
@@ -121,7 +121,8 @@ function clearCase(){
     bonus = false;
     newBonus()
     newItem()
-    setInterval(reload, 10000)
+    console.log('ok ca clear')
+
 }
 var travelLog = []
 var grid = [
@@ -216,8 +217,6 @@ function newBonus(){
             getHtmlCase.style.backgroundSize ="35px"
             getHtmlCase.style.backgroundRepeat = "no-repeat"
             bonus = true;
-            console.log("la case du bonus est", randomCaseBonus)
-
         }else if(wallList.includes(randomCaseBonus) == true ){
             console.log('relance')
             newBonus()
@@ -247,7 +246,9 @@ function htmlCase(){
     }
     if(pos === randomCaseReload){
         randomCaseReload = 0
-        clearCase()    
+        reloadItem = 0
+        setTimeout(reload, 10000)
+        clearCase()   
     }
 
 
