@@ -7,6 +7,7 @@
 //        {transform: 'margin-'}
 //    ])
 // };
+
 var randomCaseReload = 0
 var reloadItem = 0
 function reload(){
@@ -185,7 +186,7 @@ function newItem(){
     caseYxBottom = randomCaseY +1 + randomCaseX.toString()
     caseyXLeft = randomCaseY.toString() + (randomCaseX - 1 )
     caseyXRight = randomCaseY.toString() + (randomCaseX + 1)
-    if(wallList.includes(caseYxTop) == true && wallList.includes(caseYxBottom) == true && wallList.includes(caseyXLeft) == true && wallList.includes(caseyXRight) == true){
+    if(wallList.includes(caseYxTop) == true || wallList.includes(caseYxBottom) == true || wallList.includes(caseyXLeft) == true || wallList.includes(caseyXRight) == true){
         console.log('remplacage du proute')
         newItem()
     }else{
